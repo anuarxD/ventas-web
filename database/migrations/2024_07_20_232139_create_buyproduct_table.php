@@ -17,12 +17,12 @@ return new class extends Migration
             $table->integer('quantity')->default(0); // cantidad que compré
 
             //relacion con la compras
-            $table->unsignedBigInteger('buyId');
-            $table->foreign('buyId')->references('id')->on('buys')->onDelete('cascade');
+            $table->unsignedBigInteger('buy_id');
+            $table->foreign('buy_id')->references('id')->on('buys')->onDelete('cascade');
 
             //relacion con los productos
-            $table->unsignedBigInteger('productId');
-            $table->foreign('productId')->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
         });
     }

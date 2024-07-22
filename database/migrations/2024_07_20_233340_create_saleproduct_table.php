@@ -16,11 +16,11 @@ return new class extends Migration
             $table->decimal('salePrice',8,2)-> default(0); //precio de la venta, numero de enteros y numero de decimales
             $table->integer('quantity')->default(0); // cantidad que vendí
 
-            $table->unsignedBigInteger('productId');
-            $table->foreign('productId')->references('id')->on('products')->onDelete('cascade');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
-            $table->unsignedBigInteger('saleId');
-            $table->foreign('saleId')->references('id')->on('sales')->onDelete('cascade');
+            $table->unsignedBigInteger('sale_id');
+            $table->foreign('sale_id')->references('id')->on('sales')->onDelete('cascade');
             $table->timestamps();
         });
     }

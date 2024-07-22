@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Models\Category; // para poder CRUD categorias... 
+use App\Models\Product; // para poder CRUD Product
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB; //para hacer consultas como SQL
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -13,6 +16,7 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

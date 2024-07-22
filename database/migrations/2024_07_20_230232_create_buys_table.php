@@ -16,12 +16,12 @@ return new class extends Migration
             $table->timestamp('buyDate');
             
             //relacion con proveedores
-            $table->unsignedBigInteger('providerId');
-            $table->foreign('providerId')->references('id')->on('providers');
+            $table->unsignedBigInteger('provider_id');
+            $table->foreign('provider_id')->references('id')->on('providers');
 
             //relacion con el usuario que hace la compra del producto a los proveedores
-            $table->unsignedBigInteger('userId');
-            $table->foreign('userId')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
                       
             $table->timestamps();
         });

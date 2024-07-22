@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name',75);
-            $table->decimal('buySale',8,2); // precio de venta -> nombre, numero de enteros y el ultomo valor son los decimales;
+            $table->decimal('salePrice',8,2); // precio de venta -> nombre, numero de enteros y el ultomo valor son los decimales; // se corrige nombre de la columna
             $table->integer('quantity')->default(0); // aqui estamos por niendo por defecto el valor cero
             $table->enum('status',['Activo','Descontinuado'])->default('Activo'); //enmum nos permite limitar los tiopos de valores que se registran enn la tabla
             
             //crearemos la llave foranea para la ligar las categorias
-            $table->unsignedBigInteger('categoryId');
-            $table->foreign('categoryId')->references('id')->on('categories')->onDelete('cascade'); 
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade'); 
             $table->timestamps();
         });
     }

@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->timestamp('saleDate');
 
-            $table->unsignedBigInteger('clientId');
-            $table->foreign('clientId')->references('id')->on('clients')->onDelete('cascade');
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
 
-            $table->unsignedBigInteger('userId');
-            $table->foreign('userId')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

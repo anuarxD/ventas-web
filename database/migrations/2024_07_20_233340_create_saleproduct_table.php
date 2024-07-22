@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('saleproduct', function (Blueprint $table) {
             $table->id();
+            $table->decimal('salePrice',8,2)-> default(0); //precio de la venta, numero de enteros y numero de decimales
+            $table->integer('quantity')->default(0); // cantidad que vendí
 
             $table->unsignedBigInteger('productId');
             $table->foreign('productId')->references('id')->on('products')->onDelete('cascade');

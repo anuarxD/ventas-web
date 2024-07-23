@@ -21,10 +21,13 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientSeeder::class);
         $this->call(UserSeeder::class);
 
+
+        //factory para poder crear la tabla intermedia de producto-venta
         $products = Product::factory(50)->create();
         Client::factory(20)->create();
         $sales =Sale::factory(10)->create();
 
+        //Aqui esta la informacion enlazada entre producto y venta
         $products->each(function ($product) use ($sales){
             $product->sales()->attach($sales->random()->id, ['quantity' => 2, 'salePrice' => 10 ]);
         });

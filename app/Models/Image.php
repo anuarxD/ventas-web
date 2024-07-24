@@ -11,9 +11,11 @@ class Image extends Model
     use HasFactory;
 
     protected $table = 'images';
+    protected $fillable = ['url'];
     
     public function imageable(): MorphTo
     {
+      
         return $this->morphTo(Image::class);  // el campo polimórfico en la tabla images indica que es un producto, cliente, proveedor o usuario
     }
 }

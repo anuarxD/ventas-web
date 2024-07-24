@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo; // palabra reservada para un producto pertenece a una categoria
 use Illuminate\Database\Eloquent\Relations\BelongsToMany; 
 use Illuminate\Database\Eloquent\Relations\MorphOne; //polioformicamente un producto a una imagen
+use App\Models\Image; // modelo de imagenes que se relaciona con productos
 
 class Product extends Model
 {
     use HasFactory;
     protected $table = 'products';
+
+    protected $fillable = ['name', 'salePrice','quantity','status','category_id'];
 
     public function category() : BelongsTo
     {
@@ -25,7 +28,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Sale::class);  // relacion de muchos a muchos entre ventas y productos
     }
-    public function imagen() : MorphOne
+    public function image() : MorphOne
     {
         return $this->morphOne(Image::class, 'imageable'); // uno a uno poliformicamente 
     }

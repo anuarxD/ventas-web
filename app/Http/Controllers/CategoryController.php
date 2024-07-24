@@ -14,15 +14,16 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+        dd(csrf_token()); 
        // return view('categories.index', compact('categories')); así seria si es blade / laravel ... (sería mas o menos así)
-        return Inertia::render('categories/index', ['categories' => $categories]);
+       // return Inertia::render('categories/index', ['categories' => $categories]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {
+    {   
         return Inertia::render('categories/create');
     }
 
@@ -33,10 +34,11 @@ class CategoryController extends Controller
     {
         $category = new Category();
         $category->name = $request->name;
-        $category->descripcion = $request->description;
+        $category->description = $request->description;
         $category->save();
 
-        return redirect()->route('categories.index');  //->with('status', 'Categoría creada correctamente.');
+        dd($category);
+        //return redirect()->route('categories.index');  //->with('status', 'Categoría creada correctamente.');
     }
 
     /**

@@ -15,6 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
+        //dd(($products)->toArray());
         return inertia::render('products/index');
         
     }
@@ -34,14 +35,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product();
-        $product->name = $request->name;
-        $product->salePrice = $request->salePrice;
-        $product->quantity = $request->quantity;
-        $product->status = $request->status;
-        $product->category_id = $request->category_id;
+        $product = new Product($request->all()); //para poder aplicar esto tiene que estar el fillable en el modelo 
+        //$product->name = $request->name;
+        //$product->salePrice = $request->salePrice;
+        //$product->quantity = $request->quantity;
+        //$product->status = $request->status;
+        //$product->category_id = $request->category_id;
         $product->save();
 
+        if ($request->hasFile('image')) {
+            $image_path = 'public/images';
+            $image = $request->file('image');
+            $name_image = time()."-". $image->getClientOriginalName();
+            $request->file('image')->storeAs($image_path,$name_image);
+            $product->image()->create(['url' => $name_image]);
+        }
+        //DD('ok');
         return redirect()->route('products.index');
     }
 
@@ -52,7 +61,8 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
        // $categories = Category::all();
-        return Inertia::render('products/show', ['product' => $product]);  
+       //dd($product->image->url); 
+       return Inertia::render('products/show', ['product' => $product]);  
     }
 
     /**
@@ -70,7 +80,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = Product::find();
+        $product = Product::find($id);
         $product->name = $request->name;
         $product->salePrice = $request->salePrice;
         $product->quantity = $request->quantity;
@@ -78,6 +88,14 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->save();
 
+        if ($request->hasFile('image')) {
+            $image_path = 'public/images';
+            $image = $request->file('image');
+            $name_image = time()."-". $image->getClientOriginalName();
+            $request->file('image')->storeAs($image_path,$name_image);
+            $product->image()->update(['url' => $name_image]);
+        }
+        //dd('ok');
         return redirect()->route('products.index');
     }
 
@@ -88,7 +106,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
-
+        //dd($product);
         return redirect()->route('products.index');  //->with('status', 'Producto eliminado correctamente.');
     }
 }

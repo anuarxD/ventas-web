@@ -37,7 +37,7 @@ class SaleController extends Controller
         $sale->user_id = $request->user_id;
         $sale->save();
 
-        return Redirect::route('sales.index');
+        return Redirect::route('Sales.Index');
     }
 
     /**
@@ -69,7 +69,7 @@ class SaleController extends Controller
         $sale->user_id = $request->user_id;
         $sale->save();
 
-        return Redirect::route('sales.index');
+        return Redirect::route('Sales.Index');
     }
 
     /**
@@ -79,6 +79,6 @@ class SaleController extends Controller
     {
         $sale = Sale::find($id);
         $sale->delete();
-        return Redirect::route('sales.index');
+        return Redirect::route('Sales.Index');
     }
 }

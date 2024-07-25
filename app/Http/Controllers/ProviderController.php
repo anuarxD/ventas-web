@@ -39,7 +39,7 @@ class ProviderController extends Controller
         $provider->email = $request->email;
         $provider->save();
 
-        return Redirect::route('providers.index');
+        return Redirect::route('Providers.Index');
     }
 
     /**
@@ -73,7 +73,7 @@ class ProviderController extends Controller
         $provider->email = $request->email;
         $provider->save();
 
-        return Redirect::route('providers.index');
+        return Redirect::route('Providers.Index');
     }
 
     /**
@@ -83,6 +83,6 @@ class ProviderController extends Controller
     {
         $provider = Provider::find($id);
         $provider->delete();
-        return Redirect::route('providers.index');
+        return Redirect::route('Providers.Index');
     }
 }

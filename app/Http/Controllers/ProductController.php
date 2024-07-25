@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
         $products = Product::all();
         //dd(($products)->toArray());
-        return inertia::render('products/index');
+        return inertia::render('Products/Index');
         
     }
 
@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function create()
     {   
         $categories = Category::all();
-        return Inertia::render('products/create',['categories' => $categories]);
+        return Inertia::render('Products/Create',['categories' => $categories]);
 
     }
 
@@ -51,7 +51,7 @@ class ProductController extends Controller
             $product->image()->create(['url' => $name_image]);
         }
         //DD('ok');
-        return redirect()->route('products.index');
+        return redirect()->route('Products.Index');
     }
 
     /**
@@ -62,7 +62,7 @@ class ProductController extends Controller
         $product = Product::find($id);
        // $categories = Category::all();
        //dd($product->image->url); 
-       return Inertia::render('products/show', ['product' => $product]);  
+       return Inertia::render('Products/Show', ['product' => $product]);  
     }
 
     /**
@@ -72,7 +72,7 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $categories = Category::all();
-        return Inertia::render('products/edit', ['product' => $product, 'categories' => $categories]);  
+        return Inertia::render('Products/Edit', ['product' => $product, 'categories' => $categories]);  
     }
 
     /**
@@ -96,7 +96,7 @@ class ProductController extends Controller
             $product->image()->update(['url' => $name_image]);
         }
         //dd('ok');
-        return redirect()->route('products.index');
+        return redirect()->route('Products.Index');
     }
 
     /**
@@ -107,6 +107,6 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product->delete();
         //dd($product);
-        return redirect()->route('products.index');  //->with('status', 'Producto eliminado correctamente.');
+        return redirect()->route('Products.Index');  //->with('status', 'Producto eliminado correctamente.');
     }
 }

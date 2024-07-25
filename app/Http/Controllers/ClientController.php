@@ -38,7 +38,7 @@ class ClientController extends Controller
         $client->address = $request->address;
         $client->save();
 
-        return Redirect::route('clients.index');
+        return Redirect::route('Clients.Index');
     }
 
     /**
@@ -71,7 +71,7 @@ class ClientController extends Controller
         $client->address = $request->address;
         $client->save();
 
-        return Redirect::route('clients.index');
+        return Redirect::route('Clients.Index');
     }
 
     /**
@@ -81,6 +81,6 @@ class ClientController extends Controller
     {
         $client = Client::find($id);
         $client->delete();
-        return Redirect::route('clients.index');
+        return Redirect::route('Clients.Index');
     }
 }

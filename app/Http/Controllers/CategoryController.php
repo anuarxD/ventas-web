@@ -14,17 +14,24 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        dd(csrf_token()); 
-       // return view('categories.index', compact('categories')); así seria si es blade / laravel ... (sería mas o menos así)
-       // return Inertia::render('categories/index', ['categories' => $categories]);
+        //dd(csrf_token()); 
+       //return view('categories.index', compact('categories')); así seria si es blade / laravel ... (sería mas o menos así)
+       return Inertia::render('Categories/Index', ['categories' => $categories]);
     }
 
+    public function test()
+    {
+        $categories = Category::all();
+        //dd(csrf_token()); 
+       //return view('categories.index', compact('categories')); así seria si es blade / laravel ... (sería mas o menos así)
+       return Inertia::render('Categories/Test', ['categories' => $categories]);
+    }
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {   
-        return Inertia::render('categories/create');
+        return Inertia::render('Categories/Create');
     }
 
     /**
@@ -37,8 +44,8 @@ class CategoryController extends Controller
         $category->description = $request->description;
         $category->save();
 
-        dd($category);
-        //return redirect()->route('categories.index');  //->with('status', 'Categoría creada correctamente.');
+        //dd($category);
+        return redirect()->route('Categories.Index');  //->with('status', 'Categoría creada correctamente.');
     }
 
     /**
@@ -47,7 +54,7 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         $category = Category::find($id);
-        return Inertia::render('categories/show', ['category' => $category]);
+        return Inertia::render('Categories/Show', ['category' => $category]);
     }
 
     /**
@@ -56,7 +63,7 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category = Category::findOrFail($id);
-        return Inertia::render('categories/edit', ['category' => $category]);
+        return Inertia::render('Categories/Edit', ['category' => $category]);
     }
 
     /**
@@ -69,7 +76,7 @@ class CategoryController extends Controller
         $category->descripcion = $request->description;
         $category->save();
 
-        return redirect()->route('categories.index');  //->with('status', 'Categoría actualizada correctamente.');
+        return redirect()->route('Categories.Index');  //->with('status', 'Categoría actualizada correctamente.');
     }
 
     /**
@@ -80,6 +87,6 @@ class CategoryController extends Controller
         $category = Category::find($id);
         $category->delete();
 
-        return redirect()->route('categories.index');  //->with('status', 'Categoría eliminada correctamente.');
+        return redirect()->route('Categories.Index');  //->with('status', 'Categoría eliminada correctamente.');
     }
 }

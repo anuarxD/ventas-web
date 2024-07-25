@@ -37,7 +37,7 @@ class BuyController extends Controller
         $buy->user_id = $request->user_id;
         $buy->save();
 
-        return Redirect::route('buys.index');
+        return Redirect::route('Buys.Index');
     }
 
     /**
@@ -69,7 +69,7 @@ class BuyController extends Controller
         $buy->user_id = $request->user_id;
         $buy->save();
 
-        return Redirect::route('buys.index');
+        return Redirect::route('Buys.Index');
     }
 
     /**
@@ -79,6 +79,6 @@ class BuyController extends Controller
     {
         $buy = Buy::find($id);
         $buy->delete();
-        return Redirect::route('providers.index');
+        return Redirect::route('Providers.Index');
     }
 }

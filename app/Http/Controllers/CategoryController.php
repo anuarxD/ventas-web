@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -39,13 +40,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required'
+        ]);
+
         $category = new Category();
         $category->name = $request->name;
         $category->description = $request->description;
         $category->save();
 
         //dd($category);
-        return redirect()->route('Categories.Index');  //->with('status', 'Categoría creada correctamente.');
+        return Redirect::route('categories.index');  //->with('status', 'Categoría creada correctamente.');
     }
 
     /**
@@ -73,10 +78,10 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $category->name = $request->name;
-        $category->descripcion = $request->description;
+        $category->description = $request->description;
         $category->save();
 
-        return redirect()->route('Categories.Index');  //->with('status', 'Categoría actualizada correctamente.');
+        return Redirect::route('categories.index'); //->with('status', 'Categoría actualizada correctamente.');
     }
 
     /**
@@ -87,6 +92,6 @@ class CategoryController extends Controller
         $category = Category::find($id);
         $category->delete();
 
-        return redirect()->route('Categories.Index');  //->with('status', 'Categoría eliminada correctamente.');
+        return Redirect::route('categories.index');  //->with('status', 'Categoría eliminada correctamente.');
     }
 }

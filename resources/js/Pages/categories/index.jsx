@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import Form from './Form';
 
 export default function Index ({auth}){
     
@@ -16,6 +17,7 @@ export default function Index ({auth}){
         <div>
             <input type="text" name="search" placeholder="Buscar..." 
             onChange={(event) => setSearchCategory(event.target.value)} />
+            <Form />
         </div>
          <div>
             <table>
@@ -23,6 +25,7 @@ export default function Index ({auth}){
                     <tr>
                         <th>Nombre</th>
                         <th>Descripcion</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +33,9 @@ export default function Index ({auth}){
                         <tr key={category.id}>
                             <td>{category.name}</td>
                             <td>{category.description}</td>
+                            <td>
+                                <Form id={category.id} category={category} />
+                            </td>
                         </tr>
                     ))}
                 </tbody>

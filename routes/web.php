@@ -59,12 +59,12 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::controller(ProviderController::class)->group(function () {
-        Route::get('/providers', 'index');
+        Route::get('/providers', 'index')->name('providers.index');
         Route::get('/providers/create', 'create');
-        Route::post('/providers/store', 'store');
+        Route::post('/providers/store', 'store')->name('providers.store');
         Route::get('/providers/{id}', 'show');
         Route::get('/providers/edit/{id}', 'edit');
-        Route::put('/providers/update/{id}', 'update');
+        Route::put('/providers/update/{id}', 'update')->name('providers.update');
         Route::delete('/providers/delete/{id}', 'destroy');
     });
     

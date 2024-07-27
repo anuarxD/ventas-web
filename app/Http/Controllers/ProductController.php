@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
         $products = Product::all();
         //dd(($products)->toArray());
-        return inertia::render('Products/Index');
+        return inertia::render('Products/Index',['products'=>$products]);
         
     }
 
@@ -51,7 +51,7 @@ class ProductController extends Controller
             $product->image()->create(['url' => $name_image]);
         }
         //DD('ok');
-        return redirect()->route('Products.Index');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -96,7 +96,7 @@ class ProductController extends Controller
             $product->image()->update(['url' => $name_image]);
         }
         //dd('ok');
-        return redirect()->route('Products.Index');
+        return redirect()->route('products.index');
     }
 
     /**
@@ -107,6 +107,6 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product->delete();
         //dd($product);
-        return redirect()->route('Products.Index');  //->with('status', 'Producto eliminado correctamente.');
+        return redirect()->route('products.index');  //->with('status', 'Producto eliminado correctamente.');
     }
 }

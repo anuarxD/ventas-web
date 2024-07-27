@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Client;
 use App\Models\User;
 use App\Models\Sale;
+use App\Models\Provider;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,11 +21,12 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductSeeder::class);
         $this->call(ClientSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(ProviderSeeder::class);
 
 
         //factory para poder crear la tabla intermedia de producto-venta
-        $products = Product::factory(50)->create();
-        Client::factory(20)->create();
+        $products = Product::factory(5)->create();
+        Client::factory(10)->create();
         $sales =Sale::factory(10)->create();
 
         //Aqui esta la informacion enlazada entre producto y venta

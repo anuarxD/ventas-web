@@ -48,12 +48,12 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(ProductController::class)->group(function () {
-        Route::get('/products', 'index');
+        Route::get('/products', 'index')->name('products.index');
         Route::get('/products/create', 'create');
-        Route::post('/products/store','store');
+        Route::post('/products/store','store')->name('products.store');
         Route::get('/products/show/{id}','show');
         Route::get('/products/edit/{id}','edit');
-        Route::put('/products/update/{id}','update');
+        Route::put('/products/update/{id}','update')->name('products.update');
         Route::delete('/products/delete/{id}','destroy');
     
     });
@@ -79,12 +79,12 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::controller(ClientController::class)->group(function () {
-        Route::get('/clients', 'index');
+        Route::get('/clients', 'index')->name('clients.index');
         Route::get('/clients/create', 'create');
-        Route::post('/clients/store', 'store');
+        Route::post('/clients/store', 'store')->name('clients.store');
         Route::get('/clients/show/{id}', 'show');
         Route::get('/clients/edit/{id}', 'edit');
-        Route::put('/clients/update/{id}', 'update');
+        Route::put('/clients/update/{id}', 'update')->name('clients.update');
         Route::delete('/clients/delete/{id}', 'destroy');
     });
     

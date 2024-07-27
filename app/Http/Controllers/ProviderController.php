@@ -34,12 +34,12 @@ class ProviderController extends Controller
         $provider = new Provider();
         $provider->company = $request->company;
         $provider->contact = $request->contact;
-        $provider->cell_phone = $request->cell_phone;
+        $provider->cellPhone = $request->cellPhone;
         $provider->address = $request->address;
         $provider->email = $request->email;
         $provider->save();
 
-        return Redirect::route('Providers.Index');
+        return Redirect::route('providers.index');
     }
 
     /**
@@ -68,12 +68,12 @@ class ProviderController extends Controller
         $provider = Provider::find($id);
         $provider->company = $request->company;
         $provider->contact = $request->contact;
-        $provider->cell_phone = $request->cell_phone;
+        $provider->cellPhone = $request->cellPhone;
         $provider->address = $request->address;
         $provider->email = $request->email;
         $provider->save();
 
-        return Redirect::route('Providers.Index');
+        return Redirect::route('providers.index');
     }
 
     /**
@@ -83,6 +83,6 @@ class ProviderController extends Controller
     {
         $provider = Provider::find($id);
         $provider->delete();
-        return Redirect::route('Providers.Index');
+        return Redirect::route('providers.index');
     }
 }

@@ -30,15 +30,23 @@ class ClientController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   
+        $request->validate([
+            'rfc' => 'required',
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'cellPhone' => 'required|max:18',]);
+
         $client = new Client();
-        $client->dni = $request->dni;
-        $client->full_name = $request->full_name;
-        $client->cell_phone = $request->cell_phone;
+        $client->rfc = $request->rfc;
+        $client->firstName = $request->firstName;
+        $client->lastName = $request->lastName;
+        $client->fullName = $request->firstName.' '.$request->lastName;
+        $client->cellPhone = $request->cellPhone;
         $client->address = $request->address;
         $client->save();
 
-        return Redirect::route('Clients.Index');
+        return Redirect::route('clients.index');
     }
 
     /**
@@ -63,15 +71,23 @@ class ClientController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
+    {   
+        $request->validate([
+            'rfc' => 'required',
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'cellPhone' => 'required|max:18',]);
+            
         $client = Client::find($id);
-        $client->dni = $request->dni;
-        $client->full_name = $request->full_name;
-        $client->cell_phone = $request->cell_phone;
+        $client->rfc = $request->rfc;
+        $client->firstName = $request->firstName;
+        $client->lastName = $request->lastName;
+        $client->fullName = $request->firstName.' '.$request->lastName;
+        $client->cellPhone = $request->cellPhone;
         $client->address = $request->address;
         $client->save();
 
-        return Redirect::route('Clients.Index');
+        return Redirect::route('clients.index');
     }
 
     /**
@@ -81,6 +97,6 @@ class ClientController extends Controller
     {
         $client = Client::find($id);
         $client->delete();
-        return Redirect::route('Clients.Index');
+        return Redirect::route('clients.index');
     }
 }

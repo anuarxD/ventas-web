@@ -13,6 +13,39 @@ class ClientSeeder extends Seeder
      */
     public function run(): void
     {
-        $client = DB::table('clients')->insert(['rfc'=>'XAXX010101000', 'fullName'=>'Anuar Rodríguez','firstName'=>'Anuar','lastName'=>'Rodríguez']);
+        DB::table('clients')->insert([
+            'rfc' => 'XAXX010101000',
+            'fullName' => 'Anuar Rodríguez',
+            'firstName' => 'Anuar',
+            'lastName' => 'Rodríguez'
+        ]);
+
+        DB::table('clients')->insert([
+            'rfc' => 'BEXX020202111',
+            'fullName' => 'María López',
+            'firstName' => 'María',
+            'lastName' => 'López'
+        ]);
+
+        DB::table('clients')->insert([
+            'rfc' => 'CAXX030303222',
+            'fullName' => 'Juan Pérez',
+            'firstName' => 'Juan',
+            'lastName' => 'Pérez'
+        ]);
+
+        DB::table('clients')->insert([
+            'rfc' => 'DAXX040404333',
+            'fullName' => 'Laura Martínez',
+            'firstName' => 'Laura',
+            'lastName' => 'Martínez'
+        ]);
+
+        DB::table('clients')->insert([
+            'rfc' => 'EAXX050505444',
+            'fullName' => 'Carlos Hernández',
+            'firstName' => 'Carlos',
+            'lastName' => 'Hernández'
+        ]);
     }
 }

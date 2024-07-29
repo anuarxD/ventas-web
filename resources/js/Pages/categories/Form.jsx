@@ -14,12 +14,18 @@ export default function Form({ id = 0, category = {} }) {
 
     const [showModal, setShowModal] = useState(false);
     const { data, setData, post, put, errors, reset, clearErrors } = useForm({
-        name: !category ? '' : category.name,
-        description: !category ? '' : category.description,
+        name: '',
+        description:'' ,
     });
 
     function OpenModal() {
         setShowModal(true);
+        if (id !== 0) {
+            setData({
+                'name': category.name,
+                'description': category.description,
+            });
+        }
     }
     function CloseModal(e) {
         e.preventDefault();
@@ -64,11 +70,9 @@ export default function Form({ id = 0, category = {} }) {
             <Modal show={showModal} closeable={true} onClose={setShowModal} >
                 <div className="p-4">
                     <div className="uppercase flex justify-between item-center font-semibold pb-4">
-                        {id === 0 ? (
-                            <h1>Crear nueva Categoría</h1>
-                        ) : (
-                            <h1>Editar la Categoría</h1>
-                        )}
+                        
+                            <h1> {id === 0 ? "Crear nueva Categoría" : "Editar Categoria"}</h1>
+                            
                         <button type="button" onClick={CloseModal} className="bg-gray-300 hover:bg-gray-500 px-2"><HiXMark /></button>
                     </div>
 

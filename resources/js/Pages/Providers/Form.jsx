@@ -13,15 +13,24 @@ export default function Form({ id = 0, provider = {} }) {
 
     const [showModal, setShowModal] = useState(false);
     const { data, setData, post, put, errors, reset, clearErrors } = useForm({
-        contact: !provider ? '' : provider.contact,
-        company: !provider ? '' : provider.company,
-        cellPhone: !provider ? '' : provider.cellPhone,
-        address: !provider ? '' : provider.address,
-        email: !provider ? '' : provider.email,
+        contact: '',
+        company: '',
+        cellPhone: '',
+        address: '',
+        email: '',
     });
 
     function OpenModal() {
         setShowModal(true);
+        if (id !== 0) {
+            setData({
+                contact: !provider ? '' : provider.contact,
+                company: !provider ? '' : provider.company,
+                cellPhone: !provider ? '' : provider.cellPhone,
+                address: !provider ? '' : provider.address,
+                email: !provider ? '' : provider.email,
+            });
+        }
     }
     function CloseModal(e) {
         e.preventDefault();
@@ -65,11 +74,9 @@ export default function Form({ id = 0, provider = {} }) {
             <Modal show={showModal} closeable={true} onClose={setShowModal} >
                 <div className="p-4">
                     <div className="uppercase flex justify-between item-center font-semibold pb-4">
-                        {id === 0 ? (
-                            <h1>Agregar Proveedor</h1>
-                        ) : (
-                            <h1>Editar Proveedor</h1>
-                        )}
+                        
+                            <h1>{id === 0 ? "Agregar Proveedor" : "Editar Proveedor"}</h1>
+                            
                         <button type="button" onClick={CloseModal} className="bg-gray-300 hover:bg-gray-500 px-2"><HiXMark /></button>
                     </div>
 

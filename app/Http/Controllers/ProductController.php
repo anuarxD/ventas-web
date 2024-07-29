@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Exception;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -13,10 +15,11 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $products = Product::all();
-        //dd(($products)->toArray());
-        return inertia::render('Products/Index',['products'=>$products]);
+    {   
+        $categories = Category::all();  
+        $products = Product::with(['category'])->get();
+        
+        return inertia::render('Products/Index',['products'=>$products, 'categories'=>$categories]);
         
     }
 
@@ -26,6 +29,7 @@ class ProductController extends Controller
     public function create()
     {   
         $categories = Category::all();
+
         return Inertia::render('Products/Create',['categories' => $categories]);
 
     }
@@ -35,23 +39,36 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product($request->all()); //para poder aplicar esto tiene que estar el fillable en el modelo 
-        //$product->name = $request->name;
-        //$product->salePrice = $request->salePrice;
-        //$product->quantity = $request->quantity;
-        //$product->status = $request->status;
-        //$product->category_id = $request->category_id;
-        $product->save();
+        $request->validate([
+            'name' => 'required|min:3|max:75|unique:products,name',
+            'salePrice' => 'required',
+            'status' => 'required'
+        ]);
+        DB::beginTransaction();
+        try {
+            $product = new Product($request->all()); //para poder aplicar esto tiene que estar el fillable en el modelo 
+            //$product->name = $request->name;
+            //$product->salePrice = $request->salePrice;
+            //$product->quantity = $request->quantity;
+            //$product->status = $request->status;
+            //$product->category_id = $request->category_id;
+            $product->save();
+    
+            if ($request->hasFile('image')) {
+                $image_path = 'public/images';
+                $image = $request->file('image');
+                $name_image = time()."-". $image->getClientOriginalName();
+                $request->file('image')->storeAs($image_path,$name_image);
+                $product->image()->create(['url' => $name_image]);
+            }
+            DB::commit();
+            return redirect()->route('products.index');
 
-        if ($request->hasFile('image')) {
-            $image_path = 'public/images';
-            $image = $request->file('image');
-            $name_image = time()."-". $image->getClientOriginalName();
-            $request->file('image')->storeAs($image_path,$name_image);
-            $product->image()->create(['url' => $name_image]);
+        } catch (Exception $exc) {
+            DB::rollBack();
+            return redirect()->route('products.index'); //->with('error', $exc->getMessage());
         }
-        //DD('ok');
-        return redirect()->route('products.index');
+       
     }
 
     /**

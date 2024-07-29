@@ -11,7 +11,10 @@ export default function Index({ auth }) {
    console.log(providers);
 
     const filteredProvider = providers.filter(
-        provider => provider.contact.toLowerCase().includes(searchProvider.toLowerCase())
+        provider => 
+            provider.contact.toLowerCase().includes(searchProvider.toLowerCase())||
+            provider.company.toLowerCase().includes(searchProvider.toLowerCase())
+
     )
     return (
         <AuthenticatedLayout user={auth.user}
@@ -23,7 +26,7 @@ export default function Index({ auth }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <div className='flex justify-between item-center pb-2'>
-                                <TextInput isFocused={true} type="text" name="search" placeholder="Buscar nombre del contacto..." onChange={(event) => setSearchProvider(event.target.value)} />
+                                <TextInput isFocused={true} type="text" name="search" placeholder="Buscar compañia o contacto..." onChange={(event) => setSearchProvider(event.target.value)} />
                                 <Form />
                             </div>
                             <div>

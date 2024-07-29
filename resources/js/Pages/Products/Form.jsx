@@ -9,19 +9,30 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from "@/Components/SecondaryButton";
 import InputError from "@/Components/InputError";
 
-export default function Form({ id = 0, product = {} }) {
+export default function  Form({ id = 0, product = {}, categories=[] }) {
 
     const [showModal, setShowModal] = useState(false);
     const { data, setData, post, put, errors, reset, clearErrors } = useForm({
-        name: !product ? '' : product.name,
-        salePrice: !product ? '' : product.salePrice,
-        quantity: !product ? '' : product.quantity,
-        status: !product ? '' : product.status,
-        category_id: !product ? '' : product.category_id,
+        name: '',
+        salePrice: '',
+        quantity: '',
+        status: '' ,
+        category_id: '' ,
+        image: '' ,
+
     });
 
     function OpenModal() {
         setShowModal(true);
+        if (id !== 0) {
+            setData({
+                'name': product.name,
+                'salePrice': !product ? '' : product.salePrice,
+                'quantity': !product ? '' : product.quantity,
+                'status': !product ? '' : product.status,
+                'category_id': !product ? '' : product.category_id,
+            });
+        }
     }
     function CloseModal(e) {
         e.preventDefault();
@@ -65,22 +76,20 @@ export default function Form({ id = 0, product = {} }) {
             <Modal show={showModal} closeable={true} onClose={setShowModal} >
                 <div className="p-4">
                     <div className="uppercase flex justify-between item-center font-semibold pb-4">
-                        {id === 0 ? (
-                            <h1>Agregar Producto</h1>
-                        ) : (
-                            <h1>Editar Producto</h1>
-                        )}
+                       
+                            <h1> {id === 0 ? "Agregar Producto" : "Editar Producto"} </h1>
+        
                         <button type="button" onClick={CloseModal} className="bg-gray-300 hover:bg-gray-500 px-2"><HiXMark /></button>
                     </div>
 
 
                     <form action="">
-                        <InputLabel htmlFor="name" value="name" />
+                        <InputLabel htmlFor="name" value="Producto" />
                         <TextInput className="block w-full mb-3" isFocused={true} type="text" name="name" value={data.name} placeholder="Nombre del producto" onChange={(e) => setData('name', e.target.value)} />
                         {errors.name && (
                             <InputError message={errors.name}></InputError>
                         )}
-                        
+
                         <InputLabel htmlFor="salePrice" value="Precio del producto" />
                         <TextInput className="block w-full mb-3" type="text" name="salePrice" value={data.salePrice} placeholder="Precio del producto" onChange={(e) => setData('salePrice', e.target.value)} />
                         {errors.salePrice && (
@@ -97,8 +106,15 @@ export default function Form({ id = 0, product = {} }) {
                             <InputError message={errors.status}></InputError>
                         )}
                         <InputLabel htmlFor="category_id" value="Categoría" />
-                        <TextInput className="block w-full mb-3" type="text" name="category_id" value={data.category_id} placeholder="Categoría del producto" onChange={(e) => setData('category_id', e.target.value)} />
-                        <div className="flex justify-between item-center">    
+                        <select onChange={(e)=>setData('category_id', e.target.value)}>
+                            {categories.map(category =>(
+                                <option key={category.id} value={category.id}>{category.name}</option>
+                            ))}
+                        </select>
+                        {/*<TextInput className="block w-full mb-3" type="text" name="category_id" value={data.category_id} placeholder="Categoría del producto" onChange={(e) => setData('category_id', e.target.value)} />*/}
+                        <input type="file" onChange={(e) => setData('image', e.target.files[0])} />
+
+                        <div className="flex justify-between item-center">
                             <SecondaryButton className="" onClick={CloseModal}>Cancelar</SecondaryButton>
                             <PrimaryButton onClick={submitProduct}>Guardar</PrimaryButton>
                         </div>

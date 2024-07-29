@@ -13,17 +13,28 @@ export default function Form({ id = 0, client = {} }) {
 
     const [showModal, setShowModal] = useState(false);
     const { data, setData, post, put, errors, reset, clearErrors } = useForm({
-        rfc: !client ? '' : client.rfc,
-        fullName: !client ? '' : client.fullName,
-        firstName: !client ? '' : client.firstName,
-        lastName: !client ? '' : client.lastName,
-        email:!client? '' : client.email,
-        cellPhone: !client ? '' : client.cellPhone,
-        address: !client ? '' : client.address,
+        rfc: '',
+        fullName: '',
+        firstName: '',
+        lastName: '',
+        email:'',
+        cellPhone: '',
+        address: '',
     });
 
     function OpenModal() {
         setShowModal(true);
+        if (id !== 0) {
+            setData({
+                rfc: !client ? '' : client.rfc,
+                fullName: !client ? '' : client.fullName,
+                firstName: !client ? '' : client.firstName,
+                lastName: !client ? '' : client.lastName,
+                email:!client? '' : client.email,
+                cellPhone: !client ? '' : client.cellPhone,
+                address: !client ? '' : client.address,
+            });
+        }
     }
     function CloseModal(e) {
         e.preventDefault();
@@ -67,11 +78,9 @@ export default function Form({ id = 0, client = {} }) {
             <Modal show={showModal} closeable={true} onClose={setShowModal} >
                 <div className="p-4">
                     <div className="uppercase flex justify-between item-center font-semibold pb-4">
-                        {id === 0 ? (
-                            <h1>Agregar Cliente</h1>
-                        ) : (
-                            <h1>Editar Cliente</h1>
-                        )}
+                        
+                            <h1> {id === 0 ? "Agregar Cliente" : "Editar Cliente"}</h1>
+                       
                         <button type="button" onClick={CloseModal} className="bg-gray-300 hover:bg-gray-500 px-2"><HiXMark /></button>
                     </div>
 

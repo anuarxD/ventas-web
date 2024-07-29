@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('fullName',85);
             $table->string('firstName',40);
             $table->string('lastName',45);
+            $table->string('email',150)->nullable();  //unique() para que no se repita el email
             $table->string('cellPhone',18)->nullable();
             $table->text('address')->nullable();
             //$table->date('birthDate')->nullable();

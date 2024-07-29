@@ -21,6 +21,7 @@ class ClientFactory extends Factory
             'fullname' => $this->faker->firstName().' '.$this->faker->lastName(),
             'firstName' => $this->faker->firstName(),
             'lastName' => $this->faker->lastName(),
+            'email' => $this->faker->unique()->safeEmail(),  //unique() para que no se repita el email
             'cellPhone' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
         ];

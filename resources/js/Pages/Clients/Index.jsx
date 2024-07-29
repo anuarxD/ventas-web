@@ -35,6 +35,7 @@ export default function Index({ auth }) {
                                             <th className='bg-gray-500 py-2'>Nombre Completo</th>
                                             <th className='bg-gray-500 py-2'>Nombre(s)</th>
                                             <th className='bg-gray-500 py-2'>Apellido(s)</th>
+                                            <th className='bg-gray-500 py-2'>Correo</th>
                                             <th className='bg-gray-500 py-2'>Celular</th>
                                             <th className='bg-gray-500 py-2'>Dirección</th>
                                             <th className='bg-gray-500 py-2'>Acciones</th>
@@ -47,6 +48,7 @@ export default function Index({ auth }) {
                                                 <td className='py-2 px-3 border border-gray-500'>{client.fullName}</td>
                                                 <td className='py-2 px-3 border border-gray-500'>{client.firstName}</td>
                                                 <td className='py-2 px-3 border border-gray-500'>{client.lastName}</td>
+                                                <td className='py-2 px-3 border border-gray-500'>{client.email}</td>
                                                 <td className='py-2 px-3 border border-gray-500'>{client.cellPhone}</td>
                                                 <td className='py-2 px-3 border border-gray-500'>{client.address}</td>
                                                 <td className='py-2 px-3 border border-gray-500'>

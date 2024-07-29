@@ -17,6 +17,7 @@ export default function Form({ id = 0, client = {} }) {
         fullName: !client ? '' : client.fullName,
         firstName: !client ? '' : client.firstName,
         lastName: !client ? '' : client.lastName,
+        email:!client? '' : client.email,
         cellPhone: !client ? '' : client.cellPhone,
         address: !client ? '' : client.address,
     });
@@ -91,6 +92,11 @@ export default function Form({ id = 0, client = {} }) {
                         <TextInput className="block w-full mb-3" type="text" name="lastName" value={data.lastName} placeholder="Apellido(s) del cliente" onChange={(e) => setData('lastName', e.target.value)} />
                         {errors.lastName && (
                             <InputError message={errors.lastName}></InputError>
+                        )}
+                        <InputLabel htmlFor="email" value="Correo Electronico" />
+                        <TextInput className="block w-full mb-3" type="text" name="email" value={data.email} placeholder="Correo Electrónico del cliente" onChange={(e) => setData('email', e.target.value)} />
+                        {errors.email && (
+                            <InputError message={errors.email}></InputError>
                         )}
                         <InputLabel htmlFor="cellPhone" value="Teléfono del cliente" />
                         <TextInput className="block w-full mb-3" type="text" name="cellPhone" value={data.cellPhone} placeholder="Número telefonico del Cliente" onChange={(e) => setData('cellPhone', e.target.value)} />

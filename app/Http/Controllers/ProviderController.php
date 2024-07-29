@@ -6,6 +6,8 @@ use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use App\Mail\ProviderMail;
+use Illuminate\Support\Facades\Mail;
 
 class ProviderController extends Controller
 {
@@ -72,6 +74,10 @@ class ProviderController extends Controller
         $provider->address = $request->address;
         $provider->email = $request->email;
         $provider->save();
+         //enviar correo electronico para cada vez q actualiza sus datos de proveedor
+         if($provider->email !== ""){
+            Mail::to($provider->email)->send(new ProviderMail($provider));
+        }
 
         return Redirect::route('providers.index');
     }

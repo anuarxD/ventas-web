@@ -6,6 +6,8 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use App\Mail\ClientMail;
+use Illuminate\Support\Facades\Mail;
 
 class ClientController extends Controller
 {
@@ -35,6 +37,7 @@ class ClientController extends Controller
             'rfc' => 'required',
             'firstName' => 'required',
             'lastName' => 'required',
+            'email' => 'required',
             'cellPhone' => 'required|max:18',]);
 
         $client = new Client();
@@ -42,9 +45,17 @@ class ClientController extends Controller
         $client->firstName = $request->firstName;
         $client->lastName = $request->lastName;
         $client->fullName = $request->firstName.' '.$request->lastName;
+        $client->email = $request->email;
         $client->cellPhone = $request->cellPhone;
         $client->address = $request->address;
         $client->save();
+
+        //enviar correo electronico
+        if($client->email !== ""){
+            Mail::to($client->email)->send(new ClientMail($client));
+        }
+
+        
 
         return Redirect::route('clients.index');
     }
@@ -83,6 +94,7 @@ class ClientController extends Controller
         $client->firstName = $request->firstName;
         $client->lastName = $request->lastName;
         $client->fullName = $request->firstName.' '.$request->lastName;
+        $client->email = $request->email;
         $client->cellPhone = $request->cellPhone;
         $client->address = $request->address;
         $client->save();

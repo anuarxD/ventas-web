@@ -19,6 +19,7 @@ export default function  Form({ id = 0, product = {}, categories=[] }) {
         status: '' ,
         category_id: '' ,
         image: '' ,
+        _method: 'PUT',
 
     });
 
@@ -53,7 +54,7 @@ export default function  Form({ id = 0, product = {}, categories=[] }) {
             })
             reset();
         } else {
-            put(route('products.update', id), {
+            post(route('products.update', id), {
                 onSuccess: (res) => {
                     setShowModal(false);
                 },
@@ -106,7 +107,7 @@ export default function  Form({ id = 0, product = {}, categories=[] }) {
                             <InputError message={errors.status}></InputError>
                         )}
                         <InputLabel htmlFor="category_id" value="Categoría" />
-                        <select onChange={(e)=>setData('category_id', e.target.value)}>
+                        <select className="block w-full mb-3 'border-gray-300 focus:border-indigo-500 rounded-md shadow-sm "  onChange={(e)=>setData('category_id', e.target.value)}>
                             {categories.map(category =>(
                                 <option key={category.id} value={category.id}>{category.name}</option>
                             ))}

@@ -8,7 +8,6 @@ export default function Index({ auth }) {
 
     const { products, categories} = usePage().props;
     const [searchProduct, setSearchProduct] = useState('');
-    console.log(products);
 
     const filteredProduct = products.filter(
         product => product.name.toLowerCase().includes(searchProduct.toLowerCase())

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use App\Models\Product;
 use App\Models\Category;
 use Exception;
@@ -40,7 +41,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3|max:75|unique:products,name',
+            'name' => 'required|min:3|max:75|unique:products,name,except,id',
             'salePrice' => 'required',
             'status' => 'required'
         ]);
@@ -97,23 +98,39 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = Product::find($id);
-        $product->name = $request->name;
-        $product->salePrice = $request->salePrice;
-        $product->quantity = $request->quantity;
-        $product->status = $request->status;
-        $product->category_id = $request->category_id;
-        $product->save();
+        $request->validate([
+            'name' => 'required|min:3|max:75|unique:products,name,' . $id,
+            'salePrice' => 'required',
+            'status' => 'required'
+        ]);
+        DB::beginTransaction();
+        try {
+            $product = Product::find($id);
+            $product->name = $request->name;
+            $product->salePrice = $request->salePrice;
+            $product->quantity = $request->quantity;
+            $product->status = $request->status;
+            $product->category_id = $request->category_id;
+            $product->save();
 
-        if ($request->hasFile('image')) {
-            $image_path = 'public/images';
-            $image = $request->file('image');
-            $name_image = time()."-". $image->getClientOriginalName();
-            $request->file('image')->storeAs($image_path,$name_image);
-            $product->image()->update(['url' => $name_image]);
+            if ($request->hasFile('image')) {
+                $image_path = 'public/images';
+                $image = $request->file('image');
+                $name_image = time() . "-" . $image->getClientOriginalName();
+                $request->file('image')->storeAs($image_path, $name_image);
+
+                if ($product->image === null) {
+                    $product->image()->create(['url' => $name_image]);
+                } else {
+                    $product->image()->update(['url' => $name_image]);
+                }
+            }
+            DB::commit();
+            return Redirect::route('products.index');//->with(['status' => true, 'message' => 'El producto ' . $product->name . ' fue actualizado correctamente']);
+        } catch (Exception $exc) {
+            DB::rollBack();
+            return Redirect::route('products.index');//->with(['status' => false, 'message' => 'Existen errores en el formulario.']);
         }
-        //dd('ok');
-        return redirect()->route('products.index');
     }
 
     /**

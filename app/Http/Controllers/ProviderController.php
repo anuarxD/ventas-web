@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Mail\ProviderMail;
+use Exception;
 use Illuminate\Support\Facades\Mail;
 
 class ProviderController extends Controller
@@ -33,15 +34,28 @@ class ProviderController extends Controller
      */
     public function store(Request $request)
     {
-        $provider = new Provider();
-        $provider->company = $request->company;
-        $provider->contact = $request->contact;
-        $provider->cellPhone = $request->cellPhone;
-        $provider->address = $request->address;
-        $provider->email = $request->email;
-        $provider->save();
+        $request->validate([
+            'company' => 'required',
+            'contact' => 'required',
+            'email' => 'required',
+        ]);
 
-        return Redirect::route('providers.index');
+        try {
+            $provider = new Provider();
+            $provider->company = $request->company;
+            $provider->contact = $request->contact;
+            $provider->cellPhone = $request->cellPhone;
+            $provider->addresss = $request->address;
+            $provider->email = $request->email;
+            $provider->save();
+    
+            return Redirect::route('providers.index')->with(['status' => true, 'message' => 'El cliente fue registrado con éxito']);
+
+        } catch (Exception $e) {
+            return Redirect::route('providers.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
+        }
+
+        
     }
 
     /**

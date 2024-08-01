@@ -54,14 +54,14 @@ class ClientController extends Controller
 
         //enviar correo electronico
         if($client->email !== ""){
-            Mail::to($request->email)->send(new ClientMail($client));
+            Mail::to($request->email)->send(new ClientMail($client)); 
         }
 
         
 
-        return Redirect::route('clients.index');
+        return Redirect::route('clients.index')->with(['status' => true, 'message' => 'El cliente fue registrado con éxito']);
         } catch (Exception $e) {
-           
+            return Redirect::route('clients.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
         }
 
     }

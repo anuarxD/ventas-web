@@ -8,6 +8,7 @@ import TextInput from "@/Components/TextInput";
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from "@/Components/SecondaryButton";
 import InputError from "@/Components/InputError";
+import { toast } from 'react-toastify';
 
 export default function Form({ id = 0, provider = {} }) {
 
@@ -45,9 +46,18 @@ export default function Form({ id = 0, provider = {} }) {
         if (id === 0) {
             post(route('providers.store'), {
                 onSuccess: (res) => {
+                    if (res.props.flash.status) {
+                        toast.success(res.props.flash.message) 
+                    }else {
+                        toast.error('Error al registrar el proveedor, favor de comunicarse con el administrador del sistema')
+                        console.log(res.props.flash.message)
+                        //toast.error(res.props.flash.message)
+                    }
                     setShowModal(false);
                 },
-                onError: (error) => console.log("Error: ", error)
+                onError: (error) => {
+                    toast.error('Existen errores en el formulario.')
+                }
             })
             reset();
         } else {

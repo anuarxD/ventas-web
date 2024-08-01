@@ -8,6 +8,7 @@ import TextInput from "@/Components/TextInput";
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from "@/Components/SecondaryButton";
 import InputError from "@/Components/InputError";
+import { toast } from 'react-toastify';
 
 export default function Form({ id = 0, client = {} }) {
 
@@ -17,7 +18,7 @@ export default function Form({ id = 0, client = {} }) {
         fullName: '',
         firstName: '',
         lastName: '',
-        email:'',
+        email: '',
         cellPhone: '',
         address: '',
     });
@@ -30,7 +31,7 @@ export default function Form({ id = 0, client = {} }) {
                 fullName: !client ? '' : client.fullName,
                 firstName: !client ? '' : client.firstName,
                 lastName: !client ? '' : client.lastName,
-                email:!client? '' : client.email,
+                email: !client ? '' : client.email,
                 cellPhone: !client ? '' : client.cellPhone,
                 address: !client ? '' : client.address,
             });
@@ -49,17 +50,30 @@ export default function Form({ id = 0, client = {} }) {
         if (id === 0) {
             post(route('clients.store'), {
                 onSuccess: (res) => {
+                    if (res.props.flash.status) {
+                        toast.success(res.props.flash.message) 
+                    }else {
+                        toast.error(res.props.flash.message)
+                    }
                     setShowModal(false);
+                    
                 },
-                onError: (error) => console.log("Error: ", error),
+                onError: (error) => {
+                    console.log("Error: ", error);
+                    toast.error('Existen errores en el formulario.')
+                }
             })
             reset();
         } else {
             put(route('clients.update', id), {
                 onSuccess: (res) => {
                     setShowModal(false);
+                    toast.success('Cliente actualizado con éxito')
                 },
-                onError: (error) => console.log("Error: ", error)
+                onError: (error) => {
+                    console.log("Error: ", error);
+                    toast.error('Existen errores en el formulario.')
+                }
             })
             reset();
         }
@@ -78,9 +92,9 @@ export default function Form({ id = 0, client = {} }) {
             <Modal show={showModal} closeable={true} onClose={setShowModal} >
                 <div className="p-4">
                     <div className="uppercase flex justify-between item-center font-semibold pb-4">
-                        
-                            <h1> {id === 0 ? "Agregar Cliente" : "Editar Cliente"}</h1>
-                       
+
+                        <h1> {id === 0 ? "Agregar Cliente" : "Editar Cliente"}</h1>
+
                         <button type="button" onClick={CloseModal} className="bg-gray-300 hover:bg-gray-500 px-2"><HiXMark /></button>
                     </div>
 
@@ -91,7 +105,7 @@ export default function Form({ id = 0, client = {} }) {
                         {errors.rfc && (
                             <InputError message={errors.rfc}></InputError>
                         )}
-                        
+
                         <InputLabel htmlFor="firstName" value="Nombre(s)" />
                         <TextInput className="block w-full mb-3" type="text" name="firstName" value={data.firstName} placeholder="Nombre(s) del cliente" onChange={(e) => setData('firstName', e.target.value)} />
                         {errors.firstName && (
@@ -114,7 +128,7 @@ export default function Form({ id = 0, client = {} }) {
                         )}
                         <InputLabel htmlFor="address" value="Direccion del cliente" />
                         <TextInput className="block w-full mb-3" type="text" name="address" value={data.address} placeholder="Dirección del Cliente" onChange={(e) => setData('address', e.target.value)} />
-                        <div className="flex justify-between item-center">    
+                        <div className="flex justify-between item-center">
                             <SecondaryButton className="" onClick={CloseModal}>Cancelar</SecondaryButton>
                             <PrimaryButton onClick={submitClient}>Guardar</PrimaryButton>
                         </div>

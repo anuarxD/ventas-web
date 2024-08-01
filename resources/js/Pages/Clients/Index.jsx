@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { usePage, link } from '@inertiajs/react';
+import { usePage} from '@inertiajs/react';
 import { useState } from 'react';
 import Form from './Form';
 import TextInput from '@/Components/TextInput';

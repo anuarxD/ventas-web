@@ -53,7 +53,8 @@ export default function Form({ id = 0, client = {} }) {
                     if (res.props.flash.status) {
                         toast.success(res.props.flash.message) 
                     }else {
-                        toast.error(res.props.flash.message)
+                        console.log(res.props.flash.message)
+                        toast.error('Error al guardar el cliente, favor de contactar al administrador del sistema')
                     }
                     setShowModal(false);
                     

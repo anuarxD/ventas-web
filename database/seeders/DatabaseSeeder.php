@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\User;
 use App\Models\Sale;
 use App\Models\Provider;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ClientSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(ProviderSeeder::class);
+        $this->call(PermissionSeeder::class);
 
 
         //factory para poder crear la tabla intermedia de producto-venta

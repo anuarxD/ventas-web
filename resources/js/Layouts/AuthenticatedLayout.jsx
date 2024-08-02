@@ -10,6 +10,12 @@ import { ToastContainer, toast } from 'react-toastify';
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
+    const hasPermission = (permission) => {
+        return user.roles[0].permissions.some(item => (
+            item.name === permission ? true : false
+        ))
+    }
+
     return (
         <div className="min-h-screen bg-gray-100">
             <ToastContainer />
@@ -28,11 +34,16 @@ export default function Authenticated({ user, header, children }) {
                                     Ventas
                                 </NavLink>
                             </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('categories.index')} active={route().current('categories.index')}>
-                                    Categorias
-                                </NavLink>
-                            </div>
+                            {hasPermission('Lectura categorias') && (
+                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink
+                                        href={route("categories.index")}
+                                        active={route().current("categories.index")}
+                                    >
+                                        Categorias
+                                    </NavLink>
+                                </div>
+                            )}
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('providers.index')} active={route().current('providers.index')}>
                                     Proveedores
@@ -48,7 +59,18 @@ export default function Authenticated({ user, header, children }) {
                                     Productos
                                 </NavLink>
                             </div>
+
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink href={route('roles.index')} active={route().current('roles.index')}>
+                                    Roles
+                                </NavLink>
+                            </div>
                             
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink href={route('users.index')} active={route().current('users.index')}>
+                                    Usuarios
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">

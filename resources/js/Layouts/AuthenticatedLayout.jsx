@@ -11,9 +11,14 @@ export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
     const hasPermission = (permission) => {
+        //return user.roles[0].permissions.map(item => (
+        //    item.name === permission ? true : false
+        //)); 
         return user.roles[0].permissions.some(item => (
             item.name === permission ? true : false
         ))
+
+        //return user.roles[0].permissions[2].name === permission;
     }
 
     return (
@@ -34,43 +39,54 @@ export default function Authenticated({ user, header, children }) {
                                     Ventas
                                 </NavLink>
                             </div>
-                            {hasPermission('Lectura categorias') && (
+
+                            {hasPermission('listado categorias') && (
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink href={route('categories.index')} active={route().current('categories.index')}>
+                                    Categorias
+                                </NavLink>
+                            </div>
+                            )}
+
+                            {hasPermission('listado proveedores') && (
                                 <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                    <NavLink
-                                        href={route("categories.index")}
-                                        active={route().current("categories.index")}
-                                    >
-                                        Categorias
+                                    <NavLink href={route("providers.index")} active={route().current("providers.index")}>
+                                        Proveedores
                                     </NavLink>
                                 </div>
                             )}
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('providers.index')} active={route().current('providers.index')}>
-                                    Proveedores
-                                </NavLink>
-                            </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('clients.index')} active={route().current('clients.index')}>
-                                    Clientes
-                                </NavLink>
-                            </div>
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('products.index')} active={route().current('products.index')}>
-                                    Productos
-                                </NavLink>
-                            </div>
 
+                            {hasPermission('listado clientes') && (
+                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink href={route('clients.index')} active={route().current('clients.index')}>
+                                        Clientes
+                                    </NavLink>
+                                </div>
+                            )}
+
+                            {hasPermission('listado productos') && (
+                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    <NavLink href={route('products.index')} active={route().current('products.index')}>
+                                        Productos
+                                    </NavLink>
+                                </div>
+                            )}
+
+                            {hasPermission('listado roles') && (
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('roles.index')} active={route().current('roles.index')}>
                                     Roles
                                 </NavLink>
                             </div>
+                            )}
                             
+                            {hasPermission('listado usuarios') && (
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('users.index')} active={route().current('users.index')}>
                                     Usuarios
                                 </NavLink>
                             </div>
+                            )}
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">

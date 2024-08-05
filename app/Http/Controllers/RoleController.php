@@ -51,9 +51,9 @@ class RoleController extends Controller
             DB::commit();
 
             return Redirect::route('roles.index')->with(['status' => true, 'message' => 'El rol ' . $role->name . ' fue registrado correctamente']);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             DB::rollBack();
-            return Redirect::route('roles.index')->with(['status' => false, 'message' => 'Existen errores en el formulario.']);
+            return Redirect::route('roles.index')->with(['status' => false, 'message' => 'Existen errores en el formulario.'.$e]);
         }
 
     }
@@ -97,9 +97,9 @@ class RoleController extends Controller
             DB::commit();
 
             return Redirect::route('roles.index')->with(['status' => true, 'message' => 'El rol ' . $role->name . ' fue registrado correctamente']);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             DB::rollBack();
-            return Redirect::route('roles.index')->with(['status' => false, 'message' => 'Existen errores en el formulario.']);
+            return Redirect::route('roles.index')->with(['status' => false, 'message' => 'Existen errores en el formulario.'.$e]);
         }
     }
 

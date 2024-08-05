@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 use Exception;
+
 class UserController extends Controller
 {
     /**
@@ -16,8 +18,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return Inertia::render('Users/Index', ['users' => $users]);
+        $users = User::with(['roles'])->get();
+        $roles = Role::all();
+        return Inertia::render('Users/Index', ['users' => $users, 'roles' => $roles]);
     }
 
     /**
@@ -42,19 +45,20 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             $user = new User();
+            $user->matricula = $request->matricula;
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->status = $request->status;
             $user->save();
 
-            $user->assignRole('Administrador');
+            $user->assignRole($request->role_name);
 
             DB::commit();
             return Redirect::route('users.index')->with(['status' => true, 'message' => 'El usuario ' . $user->name . ' fue registrado correctamente']);
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             DB::rollBack();
-            return Redirect::route('users.index')->with(['status' => false, 'message' => 'Existen errores en el formulario.']);
+            return Redirect::route('users.index')->with(['status' => false, 'message' => 'Existen errores en el formulario.' . $e]);
         }
     }
 
@@ -79,7 +83,27 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $user = User::find($id);
+            $user->matricula = $request->matricula;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->save();
+
+            $user->syncRoles($request->role_name);
+
+            DB::commit();
+            return Redirect::route('users.index')->with(['status' => true, 'message' => 'El usuario ' . $user->name . ' fue actualizado correctamente']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Redirect::route('users.index')->with(['status' => false, 'message' => 'Existen errores en el formulario'. $e]);
+        }
     }
 
     /**

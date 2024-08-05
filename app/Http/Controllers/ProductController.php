@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index()
     {   
         $categories = Category::all();  
-        $products = Product::with(['category'])->get();
+        $products = Product::with(['category'])->paginate(5);
         
         return inertia::render('Products/Index',['products'=>$products, 'categories'=>$categories]);
         
@@ -41,9 +41,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3|max:75|unique:products,name,except,id',
+            'name' => 'required|min:3|max:75|unique:products,name, id',
             'salePrice' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'cateory_id' => 'required'
         ]);
         DB::beginTransaction();
         try {
@@ -54,7 +55,6 @@ class ProductController extends Controller
             //$product->status = $request->status;
             //$product->category_id = $request->category_id;
             $product->save();
-    
             if ($request->hasFile('image')) {
                 $image_path = 'public/images';
                 $image = $request->file('image');
@@ -63,11 +63,11 @@ class ProductController extends Controller
                 $product->image()->create(['url' => $name_image]);
             }
             DB::commit();
-            return redirect()->route('products.index');
+            return redirect()->route('products.index')->with(['status' => true, 'message' => 'El producto "' . $product->name . '" fue registrada correctamente']);
 
-        } catch (Exception $exc) {
+        } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->route('products.index'); //->with('error', $exc->getMessage());
+            return redirect()->route('products.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
         }
        
     }
@@ -126,10 +126,10 @@ class ProductController extends Controller
                 }
             }
             DB::commit();
-            return Redirect::route('products.index');//->with(['status' => true, 'message' => 'El producto ' . $product->name . ' fue actualizado correctamente']);
+            return Redirect::route('products.index')->with(['status' => true, 'message' => 'El producto ' . $product->name . ' fue actualizado correctamente']);
         } catch (Exception $exc) {
             DB::rollBack();
-            return Redirect::route('products.index');//->with(['status' => false, 'message' => 'Existen errores en el formulario.']);
+            return Redirect::route('products.index')->with(['status' => false, 'message' => 'Existen errores en el formulario.']);
         }
     }
 

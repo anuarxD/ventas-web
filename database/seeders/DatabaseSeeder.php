@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Sale;
 use App\Models\Provider;
 
+
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,13 +19,20 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {
-        $this->call(CategorySeeder::class);
-        $this->call(ProductSeeder::class);
-        $this->call(ClientSeeder::class);
-        $this->call(UserSeeder::class);
-        $this->call(ProviderSeeder::class);
-        $this->call(PermissionSeeder::class);
+    {   
+        $this->call([
+            UserSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
+            ClientSeeder::class,
+            ProviderSeeder::class,
+            PermissionSeeder::class,
+            UserRoleSeeder::class,
+            //RolesTableSeeder::class,
+            ModelHasRolesTableSeeder::class,
+        ]);
+        
+  
 
 
         //factory para poder crear la tabla intermedia de producto-venta

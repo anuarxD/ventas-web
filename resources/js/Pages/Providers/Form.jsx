@@ -13,12 +13,7 @@ import { toast } from 'react-toastify';
 export default function Form({ id = 0, provider = {} }) {
 
     const [showModal, setShowModal] = useState(false);
-    const { data, setData, post, put, errors, reset, clearErrors } = useForm({
-        contact: '',
-        company: '',
-        cellPhone: '',
-        address: '',
-        email: '',
+    const { data, setData, post, put, errors, reset, clearErrors } = useForm({contact: '', company: '', cellPhone: '', address: '', email: '',
     });
 
     function OpenModal() {
@@ -33,8 +28,7 @@ export default function Form({ id = 0, provider = {} }) {
             });
         }
     }
-    function CloseModal(e) {
-        e.preventDefault();
+    function CloseModal() {
         setShowModal(false);
         clearErrors();
         reset();
@@ -47,8 +41,8 @@ export default function Form({ id = 0, provider = {} }) {
             post(route('providers.store'), {
                 onSuccess: (res) => {
                     if (res.props.flash.status) {
-                        toast.success(res.props.flash.message) 
-                    }else {
+                        toast.success(res.props.flash.message)
+                    } else {
                         toast.error('Error al registrar el proveedor, favor de comunicarse con el administrador del sistema')
                         console.log(res.props.flash.message)
                         //toast.error(res.props.flash.message)
@@ -63,9 +57,18 @@ export default function Form({ id = 0, provider = {} }) {
         } else {
             put(route('providers.update', id), {
                 onSuccess: (res) => {
+                    if (res.props.flash.status) {
+                        toast.success(res.props.flash.message)
+                    } else {
+                        toast.error('Error al actualizar el proveedor, favor de comunicarse con el administrador del sistema')
+                        console.log(res.props.flash.message)
+                        //toast.error(res.props.flash.message)
+                    }
                     setShowModal(false);
                 },
-                onError: (error) => console.log("Error: ", error)
+                onError: (error) => {
+                    toast.error('Existen errores en el formulario.')
+                }
             })
             reset();
         }
@@ -84,9 +87,9 @@ export default function Form({ id = 0, provider = {} }) {
             <Modal show={showModal} closeable={true} onClose={setShowModal} >
                 <div className="p-4">
                     <div className="uppercase flex justify-between item-center font-semibold pb-4">
-                        
-                            <h1>{id === 0 ? "Agregar Proveedor" : "Editar Proveedor"}</h1>
-                            
+
+                        <h1>{id === 0 ? "Agregar Proveedor" : "Editar Proveedor"}</h1>
+
                         <button type="button" onClick={CloseModal} className="bg-gray-300 hover:bg-gray-500 px-2"><HiXMark /></button>
                     </div>
 
@@ -99,16 +102,25 @@ export default function Form({ id = 0, provider = {} }) {
                         )}
                         <InputLabel htmlFor="company" value="Nombre de la Compañia" />
                         <TextInput className="block w-full mb-3" type="text" name="company" value={data.company} placeholder="Nombre de la Compañia" onChange={(e) => setData('company', e.target.value)} />
-                        
+                        {errors.company && (
+                            <InputError message={errors.company}></InputError>
+                        )}
                         <InputLabel htmlFor="cellPhone" value="Número de Telefono" />
                         <TextInput className="block w-full mb-3" type="text" name="cellPhone" value={data.cellPhone} placeholder="Número de teléfono" onChange={(e) => setData('cellPhone', e.target.value)} />
-                        
-                        <InputLabel htmlFor="caddress" value="Dirección de la Compañia" />
+                        {errors.cellPhone && (
+                            <InputError message={errors.cellPhone}></InputError>
+                        )}
+                        <InputLabel htmlFor="address" value="Dirección de la Compañia" />
                         <TextInput className="block w-full mb-3" type="text" name="address" value={data.address} placeholder="Dirección de la Compañia" onChange={(e) => setData('address', e.target.value)} />
-                        
+                        {errors.address && (
+                            <InputError message={errors.address}></InputError>
+                        )}
                         <InputLabel htmlFor="email" value="Correo electrónico " />
                         <TextInput className="block w-full mb-3" type="text" name="email" value={data.email} placeholder="Correo electrónico" onChange={(e) => setData('email', e.target.value)} />
-                        <div className="flex justify-between item-center">    
+                            {errors.email && (
+                                <InputError message={errors.email}></InputError>
+                            )}
+                        <div className="flex justify-between item-center">
                             <SecondaryButton className="" onClick={CloseModal}>Cancelar</SecondaryButton>
                             <PrimaryButton onClick={submitProvider}>Guardar</PrimaryButton>
                         </div>

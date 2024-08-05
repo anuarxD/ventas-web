@@ -1,23 +1,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { usePage, Head } from "@inertiajs/react";
+import { useState} from 'react';
 import Form from './Form';
 import TextInput from '@/Components/TextInput';
-
 
 export default function Index({ auth }) {
 
     const { categories } = usePage().props;
     const [searchCategory, setSearchCategory] = useState('');
-    console.log(categories);
+    //console.log(categories);
 
-    const filteredCategory = categories.filter(
+    const filteredCategory = categories.data.filter(
         category => category.name.toLowerCase().includes(searchCategory.toLowerCase())
     )
     return (
         <AuthenticatedLayout user={auth.user} 
-        header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Categorías</h2>}
-        >
+        header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Categorías</h2>}>
+            <Head title="Categorias" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -49,6 +48,11 @@ export default function Index({ auth }) {
                                         ))}
                                     </tbody>
                                 </table>
+                                <div className='pt-2'>
+                                    {categories.links.map((link, index) => (
+                                        <a key={index} href={link.url} dangerouslySetInnerHTML={{ __html: link.label }} className={`bg-slate-400 px-2 py-1 mx-2 hover:bg-slate-500 ${link.active ? 'bg-slate-900 text-white' : 'bg-slate-300'}`} ></a>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use App\Mail\ClientMail;
 use Exception;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -17,7 +18,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::paginate(10);
+        $clients = Client::paginate(5);
         return Inertia::render('Clients/Index', ['clients' => $clients]);
     }
 
@@ -33,37 +34,36 @@ class ClientController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {   
+    {
         $request->validate([
             'rfc' => 'required',
             'firstName' => 'required',
             'lastName' => 'required',
             'email' => 'required',
-            'cellPhone' => 'required|max:18',]);
-
+            'cellPhone' => 'required|max:18',
+        ]);
+        DB::beginTransaction();
         try {
             $client = new Client();
-        $client->rfc = $request->rfc;
-        $client->firstName = $request->firstName;
-        $client->lastName = $request->lastName;
-        $client->fullName = $request->firstName.' '.$request->lastName;
-        $client->email = $request->email;
-        $client->cellPhone = $request->cellPhone;
-        $client->address = $request->address;
-        $client->save();
+            $client->rfc = $request->rfc;
+            $client->firstName = $request->firstName;
+            $client->lastName = $request->lastName;
+            $client->fullName = $request->firstName . ' ' . $request->lastName;
+            $client->email = $request->email;
+            $client->cellPhone = $request->cellPhone;
+            $client->address = $request->address;
+            $client->save();
 
-        //enviar correo electronico
-        if($client->email !== ""){
-            Mail::to($request->email)->send(new ClientMail($client)); 
-        }
-
-        
-
-        return Redirect::route('clients.index')->with(['status' => true, 'message' => 'El cliente fue registrado con éxito']);
+            //enviar correo electronico
+            if ($client->email !== "") {
+                Mail::to($request->email)->send(new ClientMail($client));
+            }
+            DB::commit();
+            return Redirect::route('clients.index')->with(['status' => true, 'message' => 'El cliente "'.$client->fullName.'" fue registrado con éxito']);
         } catch (Exception $e) {
-            return Redirect::route('clients.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
+            DB::rollBack();
+            return Redirect::route('clients.index')->with(['status' => false, 'message' => 'Existen errores en el registro: ' . $e->getMessage()]);
         }
-
     }
 
     /**
@@ -88,24 +88,31 @@ class ClientController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {   
+    {
         $request->validate([
             'rfc' => 'required',
             'firstName' => 'required',
             'lastName' => 'required',
-            'cellPhone' => 'required|max:18',]);
-            
-        $client = Client::find($id);
-        $client->rfc = $request->rfc;
-        $client->firstName = $request->firstName;
-        $client->lastName = $request->lastName;
-        $client->fullName = $request->firstName.' '.$request->lastName;
-        $client->email = $request->email;
-        $client->cellPhone = $request->cellPhone;
-        $client->address = $request->address;
-        $client->save();
+            'cellPhone' => 'required|max:18',
+        ]);
+        DB::beginTransaction();
+        try {
+            $client = Client::find($id);
+            $client->rfc = $request->rfc;
+            $client->firstName = $request->firstName;
+            $client->lastName = $request->lastName;
+            $client->fullName = $request->firstName . ' ' . $request->lastName;
+            $client->email = $request->email;
+            $client->cellPhone = $request->cellPhone;
+            $client->address = $request->address;
+            $client->save();
 
-        return Redirect::route('clients.index');
+            DB::commit();
+            return Redirect::route('clients.index')->with(['status' => true, 'message' => 'El cliente "'.$client->fullName.'"fue actualizado con éxito']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Redirect::route('clients.index')->with(['status' => false, 'message' => 'Existen errores en el registro: ' . $e->getMessage()]);
+        }
     }
 
     /**

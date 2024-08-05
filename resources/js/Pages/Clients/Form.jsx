@@ -14,13 +14,7 @@ export default function Form({ id = 0, client = {} }) {
 
     const [showModal, setShowModal] = useState(false);
     const { data, setData, post, put, errors, reset, clearErrors } = useForm({
-        rfc: '',
-        fullName: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        cellPhone: '',
-        address: '',
+        rfc: '', fullName: '', firstName: '', lastName: '', email: '', cellPhone: '', address: '',
     });
 
     function OpenModal() {
@@ -37,8 +31,7 @@ export default function Form({ id = 0, client = {} }) {
             });
         }
     }
-    function CloseModal(e) {
-        e.preventDefault();
+    function CloseModal() {
         setShowModal(false);
         clearErrors();
         reset();
@@ -51,13 +44,12 @@ export default function Form({ id = 0, client = {} }) {
             post(route('clients.store'), {
                 onSuccess: (res) => {
                     if (res.props.flash.status) {
-                        toast.success(res.props.flash.message) 
-                    }else {
+                        toast.success(res.props.flash.message)
+                    } else {
                         console.log(res.props.flash.message)
                         toast.error('Error al guardar el cliente, favor de contactar al administrador del sistema')
                     }
                     setShowModal(false);
-                    
                 },
                 onError: (error) => {
                     console.log("Error: ", error);
@@ -68,11 +60,16 @@ export default function Form({ id = 0, client = {} }) {
         } else {
             put(route('clients.update', id), {
                 onSuccess: (res) => {
+                    if (res.props.flash.status) {
+                        toast.success(res.props.flash.message)
+                    } else {
+                        toast.error('Error al actualizar al cliente, favor de contactar al administrador del sistema')
+                        console.log(res.props.flash.message)
+                        //toast.error(res.props.flash.message)
+                    }
                     setShowModal(false);
-                    toast.success('Cliente actualizado con éxito')
                 },
                 onError: (error) => {
-                    console.log("Error: ", error);
                     toast.error('Existen errores en el formulario.')
                 }
             })

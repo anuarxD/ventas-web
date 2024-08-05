@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use App\Mail\ProviderMail;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class ProviderController extends Controller
@@ -17,7 +18,7 @@ class ProviderController extends Controller
      */
     public function index()
     {
-        $providers = Provider::all();
+        $providers = Provider::paginate(5);
         return Inertia::render('Providers/Index', ['providers' => $providers]);
     }
 
@@ -39,23 +40,21 @@ class ProviderController extends Controller
             'contact' => 'required',
             'email' => 'required',
         ]);
-
+        DB::beginTransaction();
         try {
             $provider = new Provider();
             $provider->company = $request->company;
             $provider->contact = $request->contact;
             $provider->cellPhone = $request->cellPhone;
-            $provider->addresss = $request->address;
+            $provider->address = $request->address;
             $provider->email = $request->email;
             $provider->save();
-    
-            return Redirect::route('providers.index')->with(['status' => true, 'message' => 'El cliente fue registrado con éxito']);
-
+        DB::commit();
+            return Redirect::route('providers.index')->with(['status' => true, 'message' => 'El proveedor "'.$provider->company.'"fue registrado con éxito']);
         } catch (Exception $e) {
+            DB::rollBack();
             return Redirect::route('providers.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
         }
-
-        
     }
 
     /**
@@ -80,7 +79,14 @@ class ProviderController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
+    {   
+        $request->validate([
+            'company' => 'required',
+            'contact' => 'required',
+            'email' => 'required',
+        ]);
+        DB::beginTransaction();
+        try {
         $provider = Provider::find($id);
         $provider->company = $request->company;
         $provider->contact = $request->contact;
@@ -88,12 +94,16 @@ class ProviderController extends Controller
         $provider->address = $request->address;
         $provider->email = $request->email;
         $provider->save();
-         //enviar correo electronico para cada vez q actualiza sus datos de proveedor
+        //enviar correo electronico para cada vez q actualiza sus datos de proveedor
          if($provider->email !== ""){
             Mail::to($provider->email)->send(new ProviderMail($provider));
         }
-
-        return Redirect::route('providers.index');
+        DB::commit();
+            return Redirect::route('providers.index')->with(['status' => true, 'message' => 'El Proveedor "'.$provider->company .'" fue actualizado con éxito']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Redirect::route('providers.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
+        }
     }
 
     /**

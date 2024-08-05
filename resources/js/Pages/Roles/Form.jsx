@@ -1,7 +1,6 @@
 import Modal from "@/Components/Modal";
 import { useState } from "react";
 import { useForm } from "@inertiajs/react";
-import { P } from "@/Components/P";
 import CreateButton from "@/Components/CreateButton";
 import { HiMiniPencilSquare, HiXMark } from "react-icons/hi2";
 import InputLabel from "@/Components/InputLabel";
@@ -9,6 +8,7 @@ import TextInput from "@/Components/TextInput";
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from "@/Components/SecondaryButton";
 import InputError from "@/Components/InputError";
+import Checkbox from "@/Components/Checkbox";
 
 export default function Form({ id = 0, role = {}, permissions = {} }) {
 
@@ -28,8 +28,7 @@ export default function Form({ id = 0, role = {}, permissions = {} }) {
             });
         }
     }
-    function CloseModal(e) {
-        e.preventDefault();
+    function CloseModal() {
         setShowModal(false);
         clearErrors();
         reset();
@@ -93,19 +92,28 @@ export default function Form({ id = 0, role = {}, permissions = {} }) {
                                 <InputError message={errors.name}></InputError>
                             )}
                         </div>
+                        <table>
+                            <thead>
+                                <tr className="grid grid-cols-4 gap-1">
+                                    <th >Listar</th>
+                                    <th >Crear</th>
+                                    <th >Editar</th>
+                                    <th >Eliminar</th>
+                                </tr>
+                            </thead>
+                            <div className="grid grid-cols-4 gap-1">
                         {permissions.map(permission => (
                             <div key={permission.id} >
-                                <label>
-                                    <input type="checkbox"
-                                        value={permission.name}
-                                        checked={data.permissions.includes(permission.name)}
-                                        onChange={(e) => LoadPermissionChange(e.target.value)} />
+                                <label >
+                                    <Checkbox value={permission.name} checked={data.permissions.includes(permission.name)}onChange={(e) => LoadPermissionChange(e.target.value)} /> 
                                     {permission.name}
                                 </label>
                             </div>
-
-
                         ))}
+                        </div>
+                        </table>
+                        
+                        
                         <div className="flex justify-between item-center">
                             <SecondaryButton className="" onClick={CloseModal}>Cancelar</SecondaryButton>
                             <PrimaryButton onClick={submitRole}>Guardar</PrimaryButton>

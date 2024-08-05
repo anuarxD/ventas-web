@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { usePage } from '@inertiajs/react';
+import { usePage, Head } from "@inertiajs/react";
 import { useState } from 'react';
 import Form from './Form';
 import TextInput from '@/Components/TextInput';
@@ -16,9 +16,8 @@ export default function Index({ auth }) {
     )
     return (
         <AuthenticatedLayout user={auth.user} 
-        header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Roles</h2>}
-        >
-
+        header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Roles</h2>} >
+            <Head title="Roles" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">

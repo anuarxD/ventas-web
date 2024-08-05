@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class CategoryController extends Controller
 {
@@ -14,24 +16,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        //dd(csrf_token()); 
-       //return view('categories.index', compact('categories')); así seria si es blade / laravel ... (sería mas o menos así)
-       return Inertia::render('Categories/Index', ['categories' => $categories]);
+        $categories = Category::paginate(5);
+        return Inertia::render('Categories/Index', ['categories' => $categories]);
     }
 
-    public function test()
-    {
-        $categories = Category::all();
-        //dd(csrf_token()); 
-       //return view('categories.index', compact('categories')); así seria si es blade / laravel ... (sería mas o menos así)
-       return Inertia::render('Categories/Test', ['categories' => $categories]);
-    }
     /**
      * Show the form for creating a new resource.
      */
     public function create()
-    {   
+    {
         return Inertia::render('Categories/Create');
     }
 
@@ -44,13 +37,20 @@ class CategoryController extends Controller
             'name' => 'required'
         ]);
 
-        $category = new Category();
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->save();
+        DB::beginTransaction();
 
-        //dd($category);
-        return Redirect::route('categories.index');  //->with('status', 'Categoría creada correctamente.');
+        try {
+            $category = new Category();
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->save();
+            DB::commit();
+
+            return Redirect::route('categories.index')->with(['status' => true, 'message' => 'La categoria "' . $category->name . '" fue registrada correctamente']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Redirect::route('categories.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
+        }
     }
 
     /**
@@ -76,12 +76,22 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $category = Category::find($id);
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->save();
+        $request->validate([
+            'name' => 'required'
+        ]);
+        DB::beginTransaction();
+        try {
+            $category = Category::find($id);
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->save();
+            DB::commit();
 
-        return Redirect::route('categories.index'); //->with('status', 'Categoría actualizada correctamente.');
+            return Redirect::route('categories.index')->with(['status' => true, 'message' => 'La categoria "' . $category->name . '" fue actualizada correctamente']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return Redirect::route('categories.index')->with(['status' => false, 'message' => 'Existen errores en el registro: '.$e->getMessage()]);
+        }
     }
 
     /**

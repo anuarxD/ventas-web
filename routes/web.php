@@ -107,12 +107,12 @@ Route::middleware('auth')->group(function () {
     });
     
     Route::controller(SaleController::class)->group(function () {
-        Route::get('/sales', 'index');
+        Route::get('/sales', 'index')->name('sales.index');
         Route::get('/sales/create', 'create');
-        Route::post('/sales/store', 'store');
+        Route::post('/sales/store', 'store')->name('sales.store');
         Route::get('/sales/show/{id}', 'show');
         Route::get('/sales/edit/{id}', 'edit');
-        Route::put('/sales/update/{id}', 'update');
+        Route::put('/sales/update/{id}', 'update')->name('sales.update');
         Route::delete('/sales/delete/{id}', 'destroy');
     });
 });

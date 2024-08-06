@@ -33,10 +33,10 @@ export default function Form({ id = 0, role = {}, permissions = {} }) {
         clearErrors();
         reset();
     }
-
+    
     const LoadPermissionChange = (value) => {
         setData('permissions', data.permissions.includes(value)
-            ? data.permissions.filter(item => item === value)
+            ? data.permissions.filter(item => item !== value)
             : [...data.permissions, value]);
     }
 

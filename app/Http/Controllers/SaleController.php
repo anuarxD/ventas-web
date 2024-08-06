@@ -6,6 +6,10 @@ use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use App\Models\Client;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class SaleController extends Controller
 {
@@ -31,14 +35,39 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
+
+         DB::beginTransaction();
+        try {
+        $client = Client::updateOrCreate(
+            ['rfc' => $request->rfc],
+            [
+                'firstName' => $request->firstName,
+                'lastName' => $request->lastName,
+                'fullName' => $request->firstName . ' ' . $request->lastName,
+            ]
+        );
+
         $sale = new Sale();
-        $sale->sale_date = $request->sale_date;
-        $sale->client_id = $request->client_id;
-        $sale->user_id = $request->user_id;
+        $sale->saleDate = now();
+        $sale->client_id = $client->id;
+        $sale->user_id = auth()->id();
         $sale->save();
 
-        return Redirect::route('Sales.Index');
+
+        foreach ($request->products as $item) {
+             $sale->products()->attach($item['id'], ['quantity' => $item['quantity'], 'salePrice' => $item['salePrice']]);
+
+             $product = Product::find($item['id']);
+             $product->quantity =  $product->quantity - $item['quantity'];
+             $product->save();
+         }
+        DB::commit();
+        return Redirect::route('dashboard')->with(['status' => true, 'message' => 'La venta fue registrada correctamente']);
+        } catch (Exception $e) {
+        DB::rollBack();
+        return Redirect::route('dashboard')->with(['status' => false, 'message' => 'Existen errores al registrar.'.$e]);
     }
+}
 
     /**
      * Display the specified resource.
@@ -64,7 +93,7 @@ class SaleController extends Controller
     public function update(Request $request, string $id)
     {
         $sale = Sale::find($id);
-        $sale->sale_date = $request->sale_date;
+        $sale->saleDate = $request->saleDate;
         $sale->client_id = $request->client_id;
         $sale->user_id = $request->user_id;
         $sale->save();

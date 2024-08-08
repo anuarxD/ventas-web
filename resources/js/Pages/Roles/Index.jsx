@@ -1,19 +1,32 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Inertia } from '@inertiajs/inertia';
 import { usePage, Head } from "@inertiajs/react";
-import { useState } from 'react';
+import {useEffect, useState } from 'react';
 import Form from './Form';
 import TextInput from '@/Components/TextInput';
-
 
 export default function Index({ auth }) {
 
     const { roles, permissions } = usePage().props;
+    
     const [searchRole, setSearchRole] = useState('');
-    console.log(roles);
+ 
 
     const filteredRole = roles.filter(
         role => role.name.toLowerCase().includes(searchRole.toLowerCase())
     )
+    
+    const isAdmin = auth.user.roles.some(role => role.name === 'Administrador');
+
+    useEffect(() => {
+        if (!isAdmin) {
+            Inertia.visit(route('403')); // Redirige al dashboard si no es administrador
+        }
+    }, [isAdmin]);
+
+    if (!isAdmin) {
+        return null; // Mientras redirige, muestra nada o un loader
+    }
     return (
         <AuthenticatedLayout user={auth.user} 
         header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Roles</h2>} >

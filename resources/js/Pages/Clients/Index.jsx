@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { usePage, Head } from "@inertiajs/react";
+import { usePage, Head, Link } from "@inertiajs/react";
 import { useState } from 'react';
 import Form from './Form';
 import TextInput from '@/Components/TextInput';
@@ -59,7 +59,20 @@ export default function Index({ auth }) {
                                 </table>
                                 <div className='pt-2'>
                                     {clients.links.map((link, index) => (
-                                        <a key={index} href={link.url} dangerouslySetInnerHTML={{ __html: link.label }} className={`bg-slate-400 px-2 py-1 mx-2 hover:bg-slate-500 ${link.active ? 'bg-slate-900 text-white' : 'bg-slate-300'}`} ></a>
+                                          link.url ? (
+                                            <Link
+                                                key={index}
+                                                href={link.url}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                                className={`bg-slate-400 px-2 py-1 mx-2 hover:bg-slate-500 ${link.active ? 'bg-slate-900 text-white' : 'bg-slate-300'}`}
+                                            />
+                                        ) : (
+                                            <span
+                                                key={index}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                                className={`bg-slate-400 px-2 py-1 mx-2 ${link.active ? 'bg-slate-900 text-white' : 'bg-slate-300'}`}
+                                            />
+                                        )
                                     ))}
                                 </div>
                             </div>

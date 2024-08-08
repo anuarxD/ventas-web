@@ -1,10 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Models\Category; // para poder CRUD categorias... 
-use App\Models\Product; // para poder CRUD Product
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\DB; //para hacer consultas como SQL
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
@@ -14,8 +11,10 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Reports\ProductStockController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ErrorController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -36,9 +35,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+   
+
 });
 
 Route::middleware('auth')->group(function () {
+
+    Route::controller(ErrorController::class)->group(function(){
+        Route::get('/Errors/Error403', 'error403')->name('403');
+    });
+
+    Route::controller(ProductStockController::class)->group(function(){
+        Route::get('/Reports/Products', 'list')->name('products.list');
+    });
 
     Route::controller(RoleController::class)->group(function () {
         Route::get('/roles', 'index')->name('roles.index');
@@ -115,9 +124,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/sales/update/{id}', 'update')->name('sales.update');
         Route::delete('/sales/delete/{id}', 'destroy');
     });
+   
 });
-
-
 
 
 require __DIR__ . '/auth.php';

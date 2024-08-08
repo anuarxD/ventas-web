@@ -1,21 +1,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { usePage, Head } from "@inertiajs/react";
-import { useState} from 'react';
+import { usePage, Head, Link } from '@inertiajs/react'; // Importa Link en lugar de InertiaLink
+import { useState } from 'react';
 import Form from './Form';
 import TextInput from '@/Components/TextInput';
 
 export default function Index({ auth }) {
-
     const { categories } = usePage().props;
     const [searchCategory, setSearchCategory] = useState('');
-    //console.log(categories);
 
-    const filteredCategory = categories.data.filter(
-        category => category.name.toLowerCase().includes(searchCategory.toLowerCase())
-    )
+    const filteredCategory = categories.data.filter(category =>
+        category.name.toLowerCase().includes(searchCategory.toLowerCase())
+    );
+
     return (
-        <AuthenticatedLayout user={auth.user} 
-        header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Categorías</h2>}>
+        <AuthenticatedLayout
+            user={auth.user}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Categorías</h2>}
+        >
             <Head title="Categorias" />
 
             <div className="py-12">
@@ -23,8 +24,13 @@ export default function Index({ auth }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <div className='flex justify-between item-center pb-2'>
-                                <TextInput isFocused={true} type="text" name="search" placeholder="Buscar..." onChange={(event) => setSearchCategory(event.target.value)} />
-                                {/*<input type="text" name="search" placeholder="Buscar..." onChange={(event) => setSearchCategory(event.target.value)} />*/}
+                                <TextInput
+                                    isFocused={true}
+                                    type="text"
+                                    name="search"
+                                    placeholder="Buscar..."
+                                    onChange={(event) => setSearchCategory(event.target.value)}
+                                />
                                 <Form />
                             </div>
                             <div>
@@ -50,7 +56,20 @@ export default function Index({ auth }) {
                                 </table>
                                 <div className='pt-2'>
                                     {categories.links.map((link, index) => (
-                                        <a key={index} href={link.url} dangerouslySetInnerHTML={{ __html: link.label }} className={`bg-slate-400 px-2 py-1 mx-2 hover:bg-slate-500 ${link.active ? 'bg-slate-900 text-white' : 'bg-slate-300'}`} ></a>
+                                        link.url ? ( // Asegúrate de que el enlace tenga una URL antes de renderizar Link
+                                            <Link
+                                                key={index}
+                                                href={link.url}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                                className={`bg-slate-400 px-2 py-1 mx-2 hover:bg-slate-500 ${link.active ? 'bg-slate-900 text-white' : 'bg-slate-300'}`}
+                                            />
+                                        ) : (
+                                            <span
+                                                key={index}
+                                                dangerouslySetInnerHTML={{ __html: link.label }}
+                                                className={`bg-slate-400 px-2 py-1 mx-2 ${link.active ? 'bg-slate-900 text-white' : 'bg-slate-300'}`}
+                                            />
+                                        )
                                     ))}
                                 </div>
                             </div>
@@ -59,5 +78,5 @@ export default function Index({ auth }) {
                 </div>
             </div>
         </AuthenticatedLayout>
-    )
+    );
 }

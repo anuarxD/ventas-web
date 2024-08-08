@@ -15,6 +15,6 @@ class DashboardController extends Controller
         $categories = Category::all();
         //$products = Product::all();
         $products = Product::with(['image'])->get();
-         return Inertia::render('Dashboard', ['products' => $products, 'categories' => $categories]); ;
+         return Inertia::render('Dashboard', ['products' => $products, 'categories' => $categories]);
     }
 }

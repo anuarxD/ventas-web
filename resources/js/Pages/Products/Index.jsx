@@ -7,6 +7,13 @@ import Show from './Show';
 
 export default function Index({ auth }) {
 
+    const hasPermission = (user, permission) => {
+
+        return user.roles[0].permissions.some(item => (
+            item.name === permission ? true : false
+        ))
+    }
+
     const { products, categories} = usePage().props;
     const [searchProduct, setSearchProduct] = useState('');
 
@@ -23,7 +30,9 @@ export default function Index({ auth }) {
                         <div className="p-6 text-gray-900">
                             <div className='flex justify-between item-center pb-2'>
                                 <TextInput isFocused={true} type="text" name="search" placeholder="Buscar producto..." onChange={(event) => setSearchProduct(event.target.value)} />
+                                {hasPermission(auth.user, 'crear productos') && (
                                 <Form categories={categories}/>
+                                )}
                             </div>
                             <div>
                                 <table className='min-w-full'>
@@ -48,7 +57,9 @@ export default function Index({ auth }) {
                                                     <td className='py-2 px-3 border border-gray-500'>{product.status}</td>
                                                     <td className='py-2 px-3 border border-gray-500'>{product.category.name}</td>
                                                     <td className='py-2 px-3 border border-gray-500 flex'>
-                                                        <Form id={product.id} product={product} categories={categories}/>
+                                                    {hasPermission(auth.user, 'editar productos') && (
+                                                        <Form id={product.id} product={product} categories={categories} />
+                                                    )}
                                                         <Show product={product} /> 
                                                     </td>
                                                 </tr>

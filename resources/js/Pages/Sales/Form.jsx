@@ -34,10 +34,11 @@ export default function Form({ id = 0, products = [] }) {
         console.log(data);
          post(route('sales.store'), {
              onSuccess: (res) => {
-                //setShowModal(false);
-                    //reset()
-                 console.log('OK', res);
-                 //closeModal();
+                setShowModal(false);
+                    reset()
+                    window.location.reload();
+                    
+                 closeModal();
              },
              onError: (error) => console.log('error: ', error)
          })

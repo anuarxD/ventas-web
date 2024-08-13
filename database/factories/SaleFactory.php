@@ -19,7 +19,7 @@ class SaleFactory extends Factory
     public function definition(): array
     {
         return [
-            'saleDate' => $this->faker->dateTime(),
+            'sale_date' => $this->faker->dateTime(),
             'user_id' => User::all()->random()->id,
             'client_id' => Client::all()->random()->id,
 

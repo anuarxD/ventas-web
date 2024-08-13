@@ -15,6 +15,7 @@ use App\Http\Controllers\Reports\ProductStockController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\Reports\TotalSaleController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -46,7 +47,13 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::controller(ProductStockController::class)->group(function(){
-        Route::get('/Reports/Products', 'list')->name('products.list');
+       Route::get('/Reports/Products', 'list')->name('reports.stock.products');
+       Route::get('/Reports/Products/pdf', 'pdf')->name('reports.stock.products.pdf');
+       Route::get('/Reports/Products/excel', 'excel')->name('reports.stock.products.excel');
+    });
+
+    Route::controller(TotalSaleController::class)->group(function(){
+        Route::get('/Reports/Sales', 'list')->name('reports.sales.total');
     });
 
     Route::controller(RoleController::class)->group(function () {

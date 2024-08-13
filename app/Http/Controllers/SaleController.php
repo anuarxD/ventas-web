@@ -18,7 +18,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::all();
+        $sales = Sale::with(['client', 'user'])->get();
         return Inertia::render('Sales/Index', ['sales' => $sales]);
     }
 
@@ -48,10 +48,10 @@ class SaleController extends Controller
         );
 
         $sale = new Sale();
-        $sale->saleDate = now();
-        $sale->client_id = $client->id;
-        $sale->user_id = auth()->id();
-        $sale->save();
+            $sale->sale_date = now();
+            $sale->client_id = $client->id;
+            $sale->user_id = auth()->id();
+            $sale->save();
 
 
         foreach ($request->products as $item) {
@@ -93,7 +93,7 @@ class SaleController extends Controller
     public function update(Request $request, string $id)
     {
         $sale = Sale::find($id);
-        $sale->saleDate = $request->saleDate;
+        $sale->sale_date = $request->sale_date;
         $sale->client_id = $request->client_id;
         $sale->user_id = $request->user_id;
         $sale->save();

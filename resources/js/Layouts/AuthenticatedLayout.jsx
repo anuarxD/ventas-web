@@ -112,8 +112,8 @@ export default function Authenticated({ user, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content align='left'>
-                                        <Dropdown.Link href={route('products.list')}>Reporte de stock de productos</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')}>Reporte de ventas</Dropdown.Link>
+                                        <Dropdown.Link href={route('reports.stock.products')}>Reporte de stock de productos</Dropdown.Link>
+                                        <Dropdown.Link href={route('reports.sales.total')}>Reporte de ventas</Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>
